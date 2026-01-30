@@ -1,9 +1,14 @@
 from __future__ import annotations
+
 import re
 import unicodedata
 from urllib.parse import urlparse, urljoin, urldefrag
 
-# basic text helpers
+
+
+# =========================
+# Basic text helpers
+# =========================
 RE_SPACES = re.compile(r"\s+")
 RE_NONSLUG = re.compile(r"[^a-z0-9\-]+")
 
@@ -29,7 +34,10 @@ def slugify(name: str) -> str:
     s = re.sub(r"-{2,}", "-", s).strip("-")
     return s
 
+
+# =========================
 # URL helpers
+# =========================
 def normalize_url(u: str) -> str:
     """
     Normalize URL:
@@ -62,6 +70,10 @@ def same_site(seed: str, u: str) -> bool:
         # Exact match or subdomain match
         if bn.endswith(an) or an.endswith(bn):
             return True
+
+        # Additional loose handling for ac.id/edu domains
+        # Example: ui.ac.id vs pmb.ui.ac.id already covered by endswith,
+        # but if seed uses www and other uses root:
         an2 = an.replace("www.", "")
         bn2 = bn.replace("www.", "")
         return bn2.endswith(an2) or an2.endswith(bn2)
@@ -76,7 +88,10 @@ def absolutize_url(base: str, href: str) -> str:
         return ""
     return normalize_url(urljoin(base, href))
 
+
+# =========================
 # Contact extraction
+# =========================
 RE_EMAIL = re.compile(r"([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})")
 RE_PHONE = re.compile(r"(\+?\d[\d\-\s\(\)]{7,}\d)")
 RE_WA = re.compile(r"(wa\.me\/\d+|whatsapp\.com\/|api\.whatsapp\.com\/send\?phone=\d+)", re.IGNORECASE)
@@ -104,7 +119,10 @@ def extract_phones(text: str) -> list[str]:
 def contains_whatsapp(text: str) -> bool:
     return bool(RE_WA.search(text or ""))
 
+
+# =========================
 # Short name / Acronym
+# =========================
 RE_PAREN_ACR = re.compile(r"\(([A-Z0-9]{2,12})\)")
 RE_WORDS = re.compile(r"[A-Za-z0-9]+")
 

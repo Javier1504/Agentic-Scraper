@@ -203,7 +203,7 @@ def main():
 
                 prov_id, city_id = match_region(region_df, info.get("province_name", "-"), info.get("city_name", "-"))
 
-                #  VISI danMISI 
+                # ========= VISI/MISI =========
                 seed_visi, text_visi, blocked_visi = bundle_text(fetcher, website, mode="visi")
 
                 use_browse_visi = (len((text_visi or "").strip()) < 1200) or blocked_visi
